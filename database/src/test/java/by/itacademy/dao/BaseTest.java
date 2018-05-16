@@ -45,11 +45,10 @@ public class BaseTest {
             Arrays.asList(objects).forEach(it -> {
                 session.save(it);
                 Assert.assertNotNull("Id is null", it.getId());
+
+                session.find(it.getClass(), it.getId());
+                Assert.assertNotNull("Entity is null", it);
             });
-
-            Object object = session.find(objects[objects.length - 1].getClass(), objects[objects.length - 1].getId());
-            Assert.assertNotNull("Entity is null", object);
-
             session.getTransaction().commit();
         }
     }

@@ -11,15 +11,17 @@ import org.hibernate.cfg.Configuration;
 public class UserDao {
 
     private static final UserDao INSTANCE = new UserDao();
+    private static final SessionFactory FACTORY = new Configuration().configure().buildSessionFactory();
 
     public User getUser(Long id) {
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        User user;
+        try (Session session = FACTORY.openSession();) {
+            session.beginTransaction();
 
-        User user = session.get(User.class, id);
+            user = session.get(User.class, id);
 
-        session.getTransaction().commit();
+            session.getTransaction().commit();
+        }
 
         return user;
     }

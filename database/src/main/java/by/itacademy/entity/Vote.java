@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -22,7 +23,7 @@ import javax.persistence.Table;
 public class Vote extends BaseEntity<Long> {
 
     @Column(name = "value", nullable = false)
-    private double value;
+    private BigDecimal value;
 
     @ManyToOne
     @JoinColumn(name = "book_id")

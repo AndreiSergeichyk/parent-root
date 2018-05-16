@@ -31,7 +31,6 @@ public class User extends BaseEntity<Long> {
     @Column(name = "password", nullable = false, unique = true)
     private String password;
 
-    @Column
     @Embedded
     private Contacts contacts;
 

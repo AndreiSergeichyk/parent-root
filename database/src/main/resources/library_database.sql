@@ -18,12 +18,6 @@ CREATE TABLE library_storage."user" (
   role_id        INTEGER                NOT NULL REFERENCES library_storage.role (id)
 );
 
-INSERT INTO library_storage."user" (name, password, telephone, addres_mailbox, role_id) VALUES (
-  'admin', 'admin', '1234567', 'admin@mail.com', (SELECT id
-                                                  FROM library_storage.role
-                                                  WHERE name = 'admin')
-);
-
 CREATE TABLE library_storage.genre (
   id   BIGSERIAL PRIMARY KEY,
   name CHARACTER VARYING(128) NOT NULL UNIQUE
@@ -71,4 +65,10 @@ CREATE TABLE library_storage.user_book (
   book_id     BIGINT NOT NULL  REFERENCES library_storage.book (id),
   date_issue  DATE   NOT NULL,
   date_return DATE   NOT NULL
+);
+
+INSERT INTO library_storage."user" (name, password, telephone, addres_mailbox, role_id) VALUES (
+  'admin', 'admin', '1234567', 'admin@mail.com', (SELECT id
+                                                  FROM library_storage.role
+                                                  WHERE name = 'admin')
 );

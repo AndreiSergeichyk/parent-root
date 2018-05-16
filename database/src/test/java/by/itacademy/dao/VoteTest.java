@@ -9,6 +9,8 @@ import org.hibernate.Session;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 public class VoteTest extends BaseTest {
 
     @Before
@@ -31,7 +33,7 @@ public class VoteTest extends BaseTest {
         Publisher publisher = new Publisher("Тест17");
         Book book = new Book("Граф Монте-Кристо17", genre, author, publisher,
                 617, "image17", 17, "description17");
-        Vote vote = new Vote(4.17, book);
+        Vote vote = new Vote(new BigDecimal(4.7), book);
 
         save(genre, author, publisher, book, vote);
     }
@@ -43,7 +45,7 @@ public class VoteTest extends BaseTest {
         Publisher publisher = new Publisher("Тест18");
         Book book = new Book("Граф Монте-Кристо18", genre, author, publisher,
                 6418, "image18", 118, "description18");
-        Vote vote = new Vote(4.18, book);
+        Vote vote = new Vote(new BigDecimal(4.7), book);
 
         find(genre, author, publisher, book, vote);
     }
