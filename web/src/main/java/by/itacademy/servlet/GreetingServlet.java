@@ -14,7 +14,7 @@ public class GreetingServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("user", UserService.getInstance().getUser());
+        req.setAttribute("user", UserService.getInstance().getUser(1L));
         getServletContext()
                 .getRequestDispatcher("/WEB-INF/jsp/greeting.jsp")
                 .forward(req, resp);
