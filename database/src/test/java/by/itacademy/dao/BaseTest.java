@@ -45,6 +45,7 @@ public class BaseTest {
             Arrays.asList(objects).forEach(it -> {
                 session.save(it);
                 Assert.assertNotNull("Id is null", it.getId());
+                session.evict(it);
 
                 session.find(it.getClass(), it.getId());
                 Assert.assertNotNull("Entity is null", it);
