@@ -1,5 +1,7 @@
 package by.itacademy.dao;
 
+import by.itacademy.dao.impl.BookDaoImpl;
+import by.itacademy.dao.impl.ReviewDaoImpl;
 import by.itacademy.entity.Author;
 import by.itacademy.entity.Book;
 import by.itacademy.entity.Contact;
@@ -8,9 +10,12 @@ import by.itacademy.entity.Publisher;
 import by.itacademy.entity.Review;
 import by.itacademy.entity.Role;
 import by.itacademy.entity.User;
-import org.hibernate.Session;
-import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
 public class ReviewTest extends BaseTest {
 
@@ -42,5 +47,13 @@ public class ReviewTest extends BaseTest {
         Review review = new Review(book, user, "Книга очень интересная0!");
 
         find(genre, author, publisher, book, role, user, review);
+    }
+
+    @Test
+    public void findByBookId() {
+        Book book = BookDaoImpl.getInstance().findByName("Java");
+        Long bookId = book.getId();
+        List<Review> results = ReviewDaoImpl.getInstance().findByBookId(bookId);
+        assertThat(results, hasSize(1));
     }
 }

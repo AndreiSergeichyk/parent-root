@@ -2,11 +2,15 @@ package by.itacademy.dao;
 
 import by.itacademy.dao.impl.AuthorDaoImpl;
 import by.itacademy.entity.Author;
-import org.hibernate.Session;
-import org.junit.Before;
+import by.itacademy.entity.Book;
 import org.junit.Test;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 
 public class AuthorTest extends BaseTest {
 
@@ -24,8 +28,9 @@ public class AuthorTest extends BaseTest {
 
     @Test
     public void findAll() {
-        try (Session session = FACTORY.openSession()) {
-            List<Author> result = AuthorDaoImpl.getInstance().findAll(1, 1);
-        }
+        List<Author> results = AuthorDaoImpl.getInstance().findAll(5, 0);
+        assertThat(results, hasSize(2));
+        List<String> names = results.stream().map(Author::getName).collect(toList());
+        assertThat(names, contains("authorSecond", "authorThird"));
     }
 }

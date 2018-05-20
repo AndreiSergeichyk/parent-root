@@ -2,6 +2,7 @@ package by.itacademy.dao;
 
 
 import by.itacademy.entity.BaseEntity;
+import by.itacademy.manager.SessionFactoryManager;
 import by.itacademy.util.TestDataImporter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,6 +20,7 @@ public class BaseTest {
 
     @Before
     public void clean() {
+        FACTORY = SessionFactoryManager.getSessionFactory();
         try (Session session = FACTORY.openSession()) {
             session.beginTransaction();
             session.createQuery("delete from UserBook ").executeUpdate();
@@ -31,14 +33,10 @@ public class BaseTest {
             session.createQuery("delete from Author ").executeUpdate();
             session.createQuery("delete from Publisher ").executeUpdate();
 
-            TestDataImporter.getInstance().importTestData(FACTORY);
             session.getTransaction().commit();
-        }
-    }
 
-    @BeforeClass
-    public static void before() {
-        FACTORY = new Configuration().configure().buildSessionFactory();
+            TestDataImporter.getInstance().importTestData(FACTORY);
+        }
     }
 
     @AfterClass

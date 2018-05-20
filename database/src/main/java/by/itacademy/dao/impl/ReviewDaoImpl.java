@@ -15,8 +15,9 @@ public class ReviewDaoImpl extends BaseDao<Long, Review> implements ReviewDao {
 
     @Override
     public List<Review> findByBookId(Long bookId) {
-        try(Session session = SESSION_FACTORY.openSession()){
-            return session.createQuery("", Review.class)
+        try (Session session = SESSION_FACTORY.openSession()) {
+            return session.createQuery("select r from Review r join r.book b where b.id = :bookId", Review.class)
+                    .setParameter("bookId", bookId)
                     .list();
         }
     }

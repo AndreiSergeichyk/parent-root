@@ -17,8 +17,8 @@ public class BookDaoImpl extends BaseDao<Long, Book> implements BookDao {
     public List<Book> findAll(Integer limit, Integer offset) {
         try (Session session = SESSION_FACTORY.openSession()) {
             return session.createQuery("select b from Book b", Book.class)
-                    .setFirstResult(offset)
-                    .setMaxResults(limit)
+                    .setFirstResult(limit)
+                    .setMaxResults(offset)
                     .list();
         }
     }
@@ -51,7 +51,7 @@ public class BookDaoImpl extends BaseDao<Long, Book> implements BookDao {
     public Book findByName(String name) {
         try (Session session = SESSION_FACTORY.openSession()) {
             return session.createQuery("select b from Book b where upper(b.name) like :name ", Book.class)
-                    .setParameter("name", name)
+                    .setParameter("name", name.toUpperCase())
                     .getSingleResult();
         }
     }
@@ -72,9 +72,7 @@ public class BookDaoImpl extends BaseDao<Long, Book> implements BookDao {
     public List<Book> findByRating(Integer limit, Integer offset) {
         try (Session session = SESSION_FACTORY.openSession()) {
             return session.createQuery("select b from Book b " +
-                    "join b.votes v group by b.name order by (v.value)", Book.class)
-                    .setFirstResult(offset)
-                    .setMaxResults(limit)
+                    "join b.votes v group by b.name order by avg (v.value)", Book.class)
                     .list();
         }
     }

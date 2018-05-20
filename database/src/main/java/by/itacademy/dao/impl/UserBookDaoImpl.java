@@ -19,7 +19,7 @@ public class UserBookDaoImpl extends BaseDao<Long, UserBook> implements UserBook
     public List<UserBook> findByUserId(Long userId) {
         try (Session session = SESSION_FACTORY.openSession()) {
             return session.createQuery("select ub from UserBook  ub join ub.user u " +
-                    "where u.id = :userId group by ub.dateIssue", UserBook.class)
+                    "where u.id = :userId order by ub.dateIssue", UserBook.class)
                     .setParameter("userId", userId)
                     .list();
         }

@@ -1,5 +1,7 @@
 package by.itacademy.dao;
 
+import by.itacademy.dao.impl.UserBookDaoImpl;
+import by.itacademy.dao.impl.UserDaoImpl;
 import by.itacademy.entity.Author;
 import by.itacademy.entity.Book;
 import by.itacademy.entity.Contact;
@@ -8,11 +10,13 @@ import by.itacademy.entity.Publisher;
 import by.itacademy.entity.Role;
 import by.itacademy.entity.User;
 import by.itacademy.entity.UserBook;
-import org.hibernate.Session;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
 public class UserBookTest extends BaseTest {
 
@@ -44,5 +48,23 @@ public class UserBookTest extends BaseTest {
         UserBook userBook = new UserBook(user, book, LocalDate.now(), LocalDate.now());
 
         find(role, user, genre, author, publisher, book, userBook);
+    }
+
+    @Test
+    public void findByUserId() {
+        User user = UserDaoImpl.getInstance().findByNameAndPassword("Petr", "admin");
+        List<UserBook> results = UserBookDaoImpl.getInstance().findByUserId(user.getId());
+        assertThat(results, hasSize(2));
+    }
+
+    @Test
+    public void save() {
+        User user = UserDaoImpl.getInstance().findByNameAndPassword("Petr", "admin");
+        List<UserBook> results = UserBookDaoImpl.getInstance().findByUserId(user.getId());
+        UserBook userBook = results.get(0);
+        UserBookDaoImpl.getInstance().save(userBook);
+
+        List<UserBook> secondResults = UserBookDaoImpl.getInstance().findByUserId(user.getId());
+        assertThat(secondResults, hasSize(3));
     }
 }

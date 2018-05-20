@@ -1,14 +1,20 @@
 package by.itacademy.dao;
 
 import by.itacademy.dao.impl.BookDaoImpl;
+import by.itacademy.dao.impl.GenreDaoImpl;
 import by.itacademy.entity.Author;
 import by.itacademy.entity.Book;
 import by.itacademy.entity.Genre;
 import by.itacademy.entity.Publisher;
-import org.hibernate.Session;
 import org.junit.Test;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 
 public class BookTest extends BaseTest {
 
@@ -36,29 +42,39 @@ public class BookTest extends BaseTest {
 
     @Test
     public void findByAuthorName() {
-        try (Session session = FACTORY.openSession()) {
-            List<Book> result = BookDaoImpl.getInstance().findByAuthorName("Petr", 1, 1);
-        }
+        List<Book> results = BookDaoImpl.getInstance().findByAuthorName("authorSecond", 5, 0);
+        assertThat(results, hasSize(1));
     }
 
     @Test
     public void findByGenreId() {
-        try (Session session = FACTORY.openSession()) {
-            List<Book> result = BookDaoImpl.getInstance().findByGenreId(1L, 1, 1);
-        }
+        Genre genre = GenreDaoImpl.getInstance().findByName("Научный");
+        Long genreId = genre.getId();
+        List<Book> results = BookDaoImpl.getInstance().findByGenreId(genreId, 5, 0);
+        assertThat(results, hasSize(2));
+        List<String> names = results.stream().map(Book::getName).collect(toList());
+        assertThat(names, contains("Java", "C+"));
     }
 
     @Test
     public void findByLetter() {
-        try (Session session = FACTORY.openSession()) {
-            List<Book> result = BookDaoImpl.getInstance().findByLetter("J", 1, 1);
-        }
+        List<Book> results = BookDaoImpl.getInstance().findByLetter("C", 5, 0);
+        assertThat(results, hasSize(1));
+        List<String> names = results.stream().map(Book::getName).collect(toList());
+        assertThat(names, contains("C+"));
     }
 
     @Test
     public void findByRating() {
-        try (Session session = FACTORY.openSession()) {
-            List<Book> result = BookDaoImpl.getInstance().findByRating(1, 1);
-        }
+        List<Book> results = BookDaoImpl.getInstance().findByRating(5, 0);
+        assertThat(results, hasSize(2));
+        List<String> names = results.stream().map(Book::getName).collect(toList());
+        assertThat(names, contains("C+", "Java"));
+    }
+
+    @Test
+    public void findByName() {
+        Book book = BookDaoImpl.getInstance().findByName("Java");
+        assertThat(book.getName(), equalTo("Java"));
     }
 }

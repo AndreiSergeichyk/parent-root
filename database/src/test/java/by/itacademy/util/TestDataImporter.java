@@ -25,6 +25,7 @@ public class TestDataImporter {
 
     public void importTestData(SessionFactory sessionFactory) {
         try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
             Author authorSecond = saveAuthor(session, "authorSecond");
             Author authorThird = saveAuthor(session, "authorThird");
 
@@ -56,6 +57,7 @@ public class TestDataImporter {
             UserBook userBookFirst = saveUserBook(session, petr, bookFirst, LocalDate.now(), LocalDate.now().plusMonths(1));
             UserBook userBookSecond = saveUserBook(session, petr, bookSecond, LocalDate.now(), LocalDate.now().plusMonths(1));
             UserBook userBookThrid = saveUserBook(session, ivan, bookThird, LocalDate.now(), LocalDate.now().plusMonths(1));
+            session.getTransaction().commit();
         }
     }
 

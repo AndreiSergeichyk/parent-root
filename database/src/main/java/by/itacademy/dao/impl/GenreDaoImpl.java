@@ -23,6 +23,15 @@ public class GenreDaoImpl extends BaseDao<Long, Genre> implements GenreDao {
         }
     }
 
+    @Override
+    public Genre findByName(String name) {
+        try (Session session = SESSION_FACTORY.openSession()) {
+            return session.createQuery("select g from Genre g where g.name = :name", Genre.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+        }
+    }
+
     public static GenreDaoImpl getInstance() {
         return INSTANCE;
     }
