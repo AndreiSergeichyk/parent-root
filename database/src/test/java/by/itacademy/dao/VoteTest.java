@@ -1,15 +1,16 @@
 package by.itacademy.dao;
 
+import by.itacademy.dao.impl.BookDaoImpl;
+import by.itacademy.dao.impl.VoteDaoImpl;
 import by.itacademy.entity.Author;
 import by.itacademy.entity.Book;
 import by.itacademy.entity.Genre;
 import by.itacademy.entity.Publisher;
 import by.itacademy.entity.Vote;
-import org.hibernate.Session;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class VoteTest extends BaseTest {
 
@@ -35,5 +36,13 @@ public class VoteTest extends BaseTest {
         Vote vote = new Vote(new BigDecimal(4.7), book);
 
         find(genre, author, publisher, book, vote);
+    }
+
+    @Test
+    public void findByBookId() {
+        Book book = BookDaoImpl.getInstance().findByName("Java");
+        Long bookId = book.getId();
+        BigDecimal avgVote = VoteDaoImpl.getInstance().findByBookId(bookId);
+        System.out.println();
     }
 }
