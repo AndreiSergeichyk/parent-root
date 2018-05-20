@@ -13,19 +13,6 @@ import java.math.BigDecimal;
 
 public class VoteTest extends BaseTest {
 
-    @Before
-    public void clean() {
-        try (Session session = FACTORY.openSession()) {
-            session.beginTransaction();
-            session.createQuery("delete from Vote ").executeUpdate();
-            session.createQuery("delete from Book ").executeUpdate();
-            session.createQuery("delete from Author ").executeUpdate();
-            session.createQuery("delete from Publisher ").executeUpdate();
-            session.createQuery("delete from Genre ").executeUpdate();
-            session.getTransaction().commit();
-        }
-    }
-
     @Test
     public void saveVote() {
         Genre genre = new Genre("Художественный17");

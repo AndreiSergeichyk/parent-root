@@ -7,15 +7,6 @@ import org.junit.Test;
 
 public class RoleTest extends BaseTest {
 
-    @Before
-    public void clean() {
-        try (Session session = FACTORY.openSession()) {
-            session.beginTransaction();
-            session.createQuery("delete from Role ").executeUpdate();
-            session.getTransaction().commit();
-        }
-    }
-
     @Test
     public void saveRole() {
         Role role = new Role("admin11");

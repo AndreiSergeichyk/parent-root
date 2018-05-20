@@ -1,26 +1,16 @@
 package by.itacademy.dao;
 
+import by.itacademy.dao.impl.BookDaoImpl;
 import by.itacademy.entity.Author;
 import by.itacademy.entity.Book;
 import by.itacademy.entity.Genre;
 import by.itacademy.entity.Publisher;
 import org.hibernate.Session;
-import org.junit.Before;
 import org.junit.Test;
 
-public class BookTest extends BaseTest {
+import java.util.List;
 
-    @Before
-    public void clean() {
-        try (Session session = FACTORY.openSession()) {
-            session.beginTransaction();
-            session.createQuery("delete from Book ").executeUpdate();
-            session.createQuery("delete from Genre ").executeUpdate();
-            session.createQuery("delete from Author ").executeUpdate();
-            session.createQuery("delete from Publisher ").executeUpdate();
-            session.getTransaction().commit();
-        }
-    }
+public class BookTest extends BaseTest {
 
     @Test
     public void saveBook() {
@@ -42,5 +32,33 @@ public class BookTest extends BaseTest {
                 6454, "image4", 134, "description4");
 
         find(genre, author, publisher, book);
+    }
+
+    @Test
+    public void findByAuthorName() {
+        try (Session session = FACTORY.openSession()) {
+            List<Book> result = BookDaoImpl.getInstance().findByAuthorName("Petr", 1, 1);
+        }
+    }
+
+    @Test
+    public void findByGenreId() {
+        try (Session session = FACTORY.openSession()) {
+            List<Book> result = BookDaoImpl.getInstance().findByGenreId(1L, 1, 1);
+        }
+    }
+
+    @Test
+    public void findByLetter() {
+        try (Session session = FACTORY.openSession()) {
+            List<Book> result = BookDaoImpl.getInstance().findByLetter("J", 1, 1);
+        }
+    }
+
+    @Test
+    public void findByRating() {
+        try (Session session = FACTORY.openSession()) {
+            List<Book> result = BookDaoImpl.getInstance().findByRating(1, 1);
+        }
     }
 }

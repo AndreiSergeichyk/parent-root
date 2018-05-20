@@ -1,20 +1,14 @@
 package by.itacademy.dao;
 
+import by.itacademy.dao.impl.AuthorDaoImpl;
 import by.itacademy.entity.Author;
 import org.hibernate.Session;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AuthorTest extends BaseTest {
+import java.util.List;
 
-    @Before
-    public void clean() {
-        try (Session session = FACTORY.openSession()) {
-            session.beginTransaction();
-            session.createQuery("delete from Author ").executeUpdate();
-            session.getTransaction().commit();
-        }
-    }
+public class AuthorTest extends BaseTest {
 
     @Test
     public void saveAuthor() {
@@ -26,5 +20,12 @@ public class AuthorTest extends BaseTest {
     public void getAuthor() {
         Author author = new Author("A.Дюма2");
         find(author);
+    }
+
+    @Test
+    public void findAll() {
+        try (Session session = FACTORY.openSession()) {
+            List<Author> result = AuthorDaoImpl.getInstance().findAll(1, 1);
+        }
     }
 }
