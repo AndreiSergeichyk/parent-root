@@ -2,9 +2,8 @@ package by.itacademy.dao.impl;
 
 import by.itacademy.dao.interfaces.Dao;
 import by.itacademy.entity.BaseEntity;
-import by.itacademy.manager.SessionFactoryManager;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -12,8 +11,8 @@ import java.util.List;
 
 public class BaseDao<PK extends Serializable, T extends BaseEntity<PK>> implements Dao<PK, T> {
 
-    protected static final SessionFactory SESSION_FACTORY = SessionFactoryManager.getSessionFactory();
-
+    @Autowired
+    protected SessionFactory sessionFactory;
     private Class<T> clazz;
 
     @SuppressWarnings("unchecked")
@@ -25,44 +24,27 @@ public class BaseDao<PK extends Serializable, T extends BaseEntity<PK>> implemen
     @Override
     @SuppressWarnings("unchecked")
     public PK save(T object) {
-        try (Session session = SESSION_FACTORY.openSession()) {
-            session.beginTransaction();
-            Serializable id = session.save(object);
-            session.getTransaction().commit();
-
-            return (PK) id;
-        }
+        return (PK) sessionFactory.getCurrentSession().save(object);
     }
 
     @Override
     public void update(T object) {
-        try (Session session = SESSION_FACTORY.openSession()) {
-            session.beginTransaction();
-            session.update(object);
-            session.getTransaction().commit();
-        }
+        sessionFactory.getCurrentSession().update(object);
     }
 
     @Override
     public void delete(T object) {
-        try (Session session = SESSION_FACTORY.openSession()) {
-            session.beginTransaction();
-            session.delete(object);
-            session.getTransaction().commit();
-        }
+        sessionFactory.getCurrentSession().delete(object);
     }
 
     @Override
     public T findById(PK id) {
-        try (Session session = SESSION_FACTORY.openSession()) {
-            return session.find(clazz, id);
-        }
+        return sessionFactory.getCurrentSession().find(clazz, id);
     }
 
     @Override
     public List<T> findAll() {
-        try (Session session = SESSION_FACTORY.openSession()) {
-            return session.createQuery(String.format(" select o from %s o", clazz.getSimpleName()), clazz).list();
-        }
+        return sessionFactory.getCurrentSession()
+                .createQuery(String.format(" select o from %s o", clazz.getSimpleName()), clazz).list();
     }
 }

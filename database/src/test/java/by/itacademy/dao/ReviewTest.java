@@ -1,7 +1,12 @@
 package by.itacademy.dao;
 
+import by.itacademy.dao.impl.AuthorDaoImpl;
 import by.itacademy.dao.impl.BookDaoImpl;
+import by.itacademy.dao.impl.GenreDaoImpl;
+import by.itacademy.dao.impl.PublisherDaoImpl;
 import by.itacademy.dao.impl.ReviewDaoImpl;
+import by.itacademy.dao.impl.RoleDaoImpl;
+import by.itacademy.dao.impl.UserDaoImpl;
 import by.itacademy.entity.Author;
 import by.itacademy.entity.Book;
 import by.itacademy.entity.Contact;
@@ -10,14 +15,38 @@ import by.itacademy.entity.Publisher;
 import by.itacademy.entity.Review;
 import by.itacademy.entity.Role;
 import by.itacademy.entity.User;
+import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
 public class ReviewTest extends BaseTest {
+
+    @Autowired
+    private AuthorDaoImpl authorDao;
+
+    @Autowired
+    private PublisherDaoImpl publisherDao;
+
+    @Autowired
+    private BookDaoImpl bookDao;
+
+    @Autowired
+    private GenreDaoImpl genreDao;
+
+    @Autowired
+    private RoleDaoImpl roleDao;
+
+    @Autowired
+    private UserDaoImpl userDao;
+
+    @Autowired
+    private ReviewDaoImpl reviewDao;
 
     @Test
     public void saveReview() {
@@ -31,29 +60,38 @@ public class ReviewTest extends BaseTest {
                 new Contact("123456789", "qwerty@mail.com9"), role);
         Review review = new Review(book, user, "Книга очень интересная9!");
 
-        save(genre, author, publisher, book, role, user, review);
+        Long genreId = genreDao.save(genre);
+        Assert.assertNotNull("Id is null", genreId);
+        Long authorId = authorDao.save(author);
+        Assert.assertNotNull("Id is null", authorId);
+        Long publisherId = publisherDao.save(publisher);
+        Assert.assertNotNull("Id is null", publisherId);
+        Long bookId = bookDao.save(book);
+        Assert.assertNotNull("Id is null", bookId);
+        Integer roleId = roleDao.save(role);
+        Assert.assertNotNull("Id is null", roleId);
+        Long userId = userDao.save(user);
+        Assert.assertNotNull("Id is null", userId);
+        Long reviewId = reviewDao.save(review);
+        Assert.assertNotNull("Id is null", reviewId);
     }
 
     @Test
     public void findReview() {
-        Genre genre = new Genre("Художественный0");
-        Author author = new Author("А.Дюма0");
-        Publisher publisher = new Publisher("Тест0");
-        Book book = new Book("Граф Монте-Кристо0", genre, author, publisher,
-                645, "image0", 130, "description0");
-        Role role = new Role("admin0");
-        User user = new User("Andrei0", "admin0",
-                new Contact("123456780", "qwerty@mail.com0"), role);
-        Review review = new Review(book, user, "Книга очень интересная0!");
-
-        find(genre, author, publisher, book, role, user, review);
+        List<Review> reviews = reviewDao.findAll();
+        assertThat(reviews, hasSize(3));
+        Review review = reviews.get(0);
+        review = reviewDao.findById(review.getId());
+        System.out.println();
+        Assert.assertThat(review.getTextReview(), equalTo("good!"));
     }
 
     @Test
     public void findByBookId() {
-        Book book = BookDaoImpl.getInstance().findByName("Java");
+        Book book = bookDao.findByName("Java");
+        Assert.assertNotNull("Entity is null", book);
         Long bookId = book.getId();
-        List<Review> results = ReviewDaoImpl.getInstance().findByBookId(bookId);
+        List<Review> results = reviewDao.findByBookId(bookId);
         assertThat(results, hasSize(1));
     }
 }

@@ -1,5 +1,10 @@
 package by.itacademy.dao;
 
+import by.itacademy.dao.impl.AuthorDaoImpl;
+import by.itacademy.dao.impl.BookDaoImpl;
+import by.itacademy.dao.impl.GenreDaoImpl;
+import by.itacademy.dao.impl.PublisherDaoImpl;
+import by.itacademy.dao.impl.RoleDaoImpl;
 import by.itacademy.dao.impl.UserBookDaoImpl;
 import by.itacademy.dao.impl.UserDaoImpl;
 import by.itacademy.entity.Author;
@@ -10,7 +15,9 @@ import by.itacademy.entity.Publisher;
 import by.itacademy.entity.Role;
 import by.itacademy.entity.User;
 import by.itacademy.entity.UserBook;
+import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +26,27 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
 public class UserBookTest extends BaseTest {
+
+    @Autowired
+    private AuthorDaoImpl authorDao;
+
+    @Autowired
+    private PublisherDaoImpl publisherDao;
+
+    @Autowired
+    private BookDaoImpl bookDao;
+
+    @Autowired
+    private GenreDaoImpl genreDao;
+
+    @Autowired
+    private RoleDaoImpl roleDao;
+
+    @Autowired
+    private UserDaoImpl userDao;
+
+    @Autowired
+    private UserBookDaoImpl userBookDao;
 
     @Test
     public void saveUserBook() {
@@ -32,39 +60,50 @@ public class UserBookTest extends BaseTest {
                 6452, "image13", 113, "description13");
         UserBook userBook = new UserBook(user, book, LocalDate.now(), LocalDate.now());
 
-        save(role, user, genre, author, publisher, book, userBook);
+        Long genreId = genreDao.save(genre);
+        Assert.assertNotNull("Id is null", genreId);
+        Long authorId = authorDao.save(author);
+        Assert.assertNotNull("Id is null", authorId);
+        Long publisherId = publisherDao.save(publisher);
+        Assert.assertNotNull("Id is null", publisherId);
+        Long bookId = bookDao.save(book);
+        Assert.assertNotNull("Id is null", bookId);
+        Integer roleId = roleDao.save(role);
+        Assert.assertNotNull("Id is null", roleId);
+        Long userId = userDao.save(user);
+        Assert.assertNotNull("Id is null", userId);
+        Long userBookId = userBookDao.save(userBook);
+        Assert.assertNotNull("Id is null", userBookId);
     }
 
     @Test
     public void findUserBook() {
-        Role role = new Role("Боевик14");
-        User user = new User("admin14", "admin14",
-                new Contact("123414", "admin@mail.ru14"), role);
-        Genre genre = new Genre("Художественный14");
-        Author author = new Author("А.Дюма14");
-        Publisher publisher = new Publisher("Тест14");
-        Book book = new Book("Граф Монте-Кристо14", genre, author, publisher,
-                614, "image14", 1314, "description14");
-        UserBook userBook = new UserBook(user, book, LocalDate.now(), LocalDate.now());
-
-        find(role, user, genre, author, publisher, book, userBook);
+        List<UserBook> userBooks = userBookDao.findAll();
+        assertThat(userBooks, hasSize(3));
+        UserBook userBook = userBooks.get(0);
+        userBooks = userBookDao.findByUserId(userBook.getUser().getId());
+        assertThat(userBooks, hasSize(2));
     }
 
     @Test
     public void findByUserId() {
-        User user = UserDaoImpl.getInstance().findByNameAndPassword("Petr", "admin");
-        List<UserBook> results = UserBookDaoImpl.getInstance().findByUserId(user.getId());
+        User user = userDao.findByNameAndPassword("Petr", "admin");
+        Assert.assertNotNull("Entity is null", user);
+        List<UserBook> results = userBookDao.findByUserId(user.getId());
+        System.out.println();
         assertThat(results, hasSize(2));
     }
 
     @Test
     public void save() {
-        User user = UserDaoImpl.getInstance().findByNameAndPassword("Petr", "admin");
-        List<UserBook> results = UserBookDaoImpl.getInstance().findByUserId(user.getId());
+        User user = userDao.findByNameAndPassword("Petr", "admin");
+        Assert.assertNotNull("Entity is null", user);
+        List<UserBook> results = userBookDao.findByUserId(user.getId());
+        assertThat(results, hasSize(2));
         UserBook userBook = results.get(0);
-        UserBookDaoImpl.getInstance().save(userBook);
+        userBookDao.save(userBook);
 
-        List<UserBook> secondResults = UserBookDaoImpl.getInstance().findByUserId(user.getId());
+        List<UserBook> secondResults = userBookDao.findByUserId(user.getId());
         assertThat(secondResults, hasSize(3));
     }
 }
