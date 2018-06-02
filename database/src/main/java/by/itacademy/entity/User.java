@@ -32,7 +32,7 @@ public class User extends BaseEntity<Long> {
     private String password;
 
     @Embedded
-    private Contacts contacts;
+    private Contact contacts;
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
@@ -41,7 +41,7 @@ public class User extends BaseEntity<Long> {
     @OneToMany(mappedBy = "user")
     private List<UserBook> userBooks = new ArrayList<>();
 
-    public User(String name, String password, Contacts contacts, Role role) {
+    public User(String name, String password, Contact contacts, Role role) {
         this.name = name;
         this.password = password;
         this.contacts = contacts;

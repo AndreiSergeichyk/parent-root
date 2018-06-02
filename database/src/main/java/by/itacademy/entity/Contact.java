@@ -13,7 +13,7 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class Contacts {
+public class Contact {
 
     @Column(name = "telephone")
     private String telephone;

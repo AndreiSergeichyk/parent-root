@@ -1,37 +1,47 @@
 package by.itacademy.dao;
 
-import by.itacademy.entity.Contacts;
+import by.itacademy.dao.impl.RoleDaoImpl;
+import by.itacademy.dao.impl.UserDaoImpl;
+import by.itacademy.entity.Contact;
 import by.itacademy.entity.Role;
 import by.itacademy.entity.User;
-import org.hibernate.Session;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.hamcrest.Matchers.equalTo;
 
 public class UserTest extends BaseTest {
 
-    @Before
-    public void clean() {
-        try (Session session = FACTORY.openSession()) {
-            session.beginTransaction();
-            session.createQuery("delete from User ").executeUpdate();
-            session.createQuery("delete from Role ").executeUpdate();
-            session.getTransaction().commit();
-        }
-    }
+    @Autowired
+    private RoleDaoImpl roleDao;
+
+    @Autowired
+    private UserDaoImpl userDao;
 
     @Test
     public void saveUser() {
         Role role = new Role("admin15");
         User user = new User("Andrei15", "admin15",
-                new Contacts("12345615", "qwerty@mail.com15"), role);
-        save(role, user);
+                new Contact("12345615", "qwerty@mail.com15"), role);
+
+        Integer roleId = roleDao.save(role);
+        Assert.assertNotNull("Id is null", roleId);
+        Long userId = userDao.save(user);
+        Assert.assertNotNull("Id is null", userId);
     }
 
     @Test
     public void findUser() {
-        Role role = new Role("admin16");
-        User user = new User("Andrei16", "admin16",
-                new Contacts("1234567816", "qwerty@mail.com16"), role);
-        find(role, user);
+        User user = userDao.findByNameAndPassword("Petr", "admin");
+        Assert.assertThat(user.getName(), equalTo("Petr"));
+        user = userDao.findById(user.getId());
+        Assert.assertThat(user.getName(), equalTo("Petr"));
+    }
+
+    @Test
+    public void findByNameAndPassword() {
+        User user = userDao.findByNameAndPassword("Petr", "admin");
+        Assert.assertThat(user.getName(), equalTo("Petr"));
     }
 }
