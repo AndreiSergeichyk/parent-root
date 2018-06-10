@@ -33,8 +33,9 @@ public class BookController {
         List<Book> books = null;
         if (genreId != null) {
             books = bookService.findAllByGenreId(genreId);
+        } else {
+            books = bookService.findAllBy(PageRequest.of(0, 5));
         }
-        books = bookService.findAllBy(PageRequest.of(0, 5));
         model.addAttribute("books", books);
 
         return "book";

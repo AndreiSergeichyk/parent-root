@@ -16,7 +16,9 @@
         <a th:href="@{/handBook}">Справочники</a>
         <a th:href="@{/addBook}">Добавить книгу</a>
         <a th:href="@{/personalAccount}">Личный кабинет</a>
-        <a th:href="@{/logout}">logout</a>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" th:value="Logout"/>
+        </form>
         <div class="form-group">
             <form th:action="@{/book}" method="post">
                 <select name="language" onchange="submit()">
@@ -29,7 +31,19 @@
     <div class="form-group">
         Жанры:
         <div th:each="genre :${genres}">
-            <a th:value="genre" th:href="@{/book}?${genre.id}"><span th:text="${genre.name}"></span></a>
+            <a href="/book"
+                th:value="genreId"
+                th:href="@{/book(genreId=${genre.id})}"><span th:text="${genre.name}"></span></a>
+        </div>
+    </div>
+    <div class="form-group">
+        <div  th:each="currentBook : ${books}">
+            Название книги: <span th:text="${currentBook.name}"></span><br>
+            Автор: <span th:text="${currentBook.author.name}"></span><br>
+            Публикация: <span th:text="${currentBook.publisher.name}"></span><br>
+            Колличество страниц: <span th:text="${currentBook.pageCount}"></span><br>
+            Колличество копий: <span th:text="${currentBook.numberCopies}"></span><br>
+            Рейтинг: <span th:text="${currentBook.votes.size()}"></span><br>
         </div>
     </div>
 </div>
