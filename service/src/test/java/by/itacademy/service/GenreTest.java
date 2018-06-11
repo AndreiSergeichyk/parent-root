@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 public class GenreTest extends BaseCase {
 
     @Autowired
@@ -15,5 +17,11 @@ public class GenreTest extends BaseCase {
     public void findByName() {
         Genre genre = genreService.findByName("Научный");
         Assert.assertEquals(genre.getName(), "Научный");
+    }
+
+    @Test
+    public void findAll(){
+        List<Genre> genres = genreService.findAll();
+        Assert.assertNotNull("Entity is null", genres);
     }
 }
