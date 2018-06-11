@@ -1,38 +1,42 @@
 package by.itacademy.dao;
 
-import by.itacademy.dao.impl.AuthorDaoImpl;
-import by.itacademy.dao.impl.BookDaoImpl;
-import by.itacademy.dao.impl.GenreDaoImpl;
-import by.itacademy.dao.impl.PublisherDaoImpl;
 import by.itacademy.entity.Author;
 import by.itacademy.entity.Book;
 import by.itacademy.entity.Genre;
 import by.itacademy.entity.Publisher;
+import by.itacademy.repository.initerface.AuthorRepository;
+import by.itacademy.repository.initerface.BookRepository;
+import by.itacademy.repository.initerface.GenreRepository;
+import by.itacademy.repository.initerface.PublisherRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
-public class BookTest extends BaseTest {
-
-    @Autowired
-    private AuthorDaoImpl authorDao;
+public class BookTest extends BaseCase {
 
     @Autowired
-    private PublisherDaoImpl publisherDao;
+    private AuthorRepository authorRepository;
 
     @Autowired
-    private BookDaoImpl bookDao;
+    private PublisherRepository publisherRepository;
 
     @Autowired
-    private GenreDaoImpl genreDao;
+    private BookRepository bookRepository;
+
+    @Autowired
+    private GenreRepository genreRepository;
 
     @Test
     public void saveBook() {
@@ -42,36 +46,36 @@ public class BookTest extends BaseTest {
         Book book = new Book("Граф Монте-Кристо3", genre, author, publisher,
                 643, "image3", 133, "description3");
 
-        Long genreId = genreDao.save(genre);
-        Assert.assertNotNull("Id is null", genreId);
-        Long authorId = authorDao.save(author);
-        Assert.assertNotNull("Id is null", authorId);
-        Long publisherId = publisherDao.save(publisher);
-        Assert.assertNotNull("Id is null", publisherId);
-        Long bookId = bookDao.save(book);
-        Assert.assertNotNull("Id is null", bookId);
+        genre = genreRepository.save(genre);
+        Assert.assertNotNull("Enyity is null", genre);
+        author = authorRepository.save(author);
+        Assert.assertNotNull("Entity is null", author);
+        publisher = publisherRepository.save(publisher);
+        Assert.assertNotNull("Entity is null", publisher);
+        book = bookRepository.save(book);
+        Assert.assertNotNull("Entity is null", book);
     }
 
     @Test
     public void findBook() {
-        Book book = bookDao.findByName("Java");
-        Assert.assertNotNull("Entity is null", book);
-        book = bookDao.findById(book.getId());
-        assertThat(book.getName(), equalTo("Java"));
+        Optional<Book> java = bookRepository.findBooksByNameLikeIgnoreCase("Java");
+        assertTrue(java.isPresent());
+        java = bookRepository.findById(java.get().getId());
+        assertThat(java.get().getName(), equalTo("Java"));
     }
 
     @Test
     public void findByAuthorName() {
-        List<Book> results = bookDao.findByAuthorName("authorSecond", 5, 0);
+        List<Book> results = bookRepository.findAllByAuthorNameLikeIgnoreCase("authorSecond");
         assertThat(results, hasSize(1));
     }
 
     @Test
     public void findByGenreId() {
-        Genre genre = genreDao.findByName("Научный");
-        Assert.assertNotNull("Entity is null", genre);
-        Long genreId = genre.getId();
-        List<Book> results = bookDao.findByGenreId(genreId, 5, 0);
+        Optional<Genre> genre = genreRepository.findByName("Научный");
+        assertTrue(genre.isPresent());
+        Long genreId = genre.get().getId();
+        List<Book> results = bookRepository.findAllByGenreId(genreId);
         assertThat(results, hasSize(2));
         List<String> names = results.stream().map(Book::getName).collect(toList());
         assertThat(names, contains("Java", "C+"));
@@ -79,7 +83,7 @@ public class BookTest extends BaseTest {
 
     @Test
     public void findByLetter() {
-        List<Book> results = bookDao.findByLetter("C", 5, 0);
+        List<Book> results = bookRepository.findBooksByNameStartingWithIgnoreCase("c");
         assertThat(results, hasSize(1));
         List<String> names = results.stream().map(Book::getName).collect(toList());
         assertThat(names, contains("C+"));
@@ -87,7 +91,7 @@ public class BookTest extends BaseTest {
 
     @Test
     public void findByRating() {
-        List<Book> results = bookDao.findByRating(5, 0);
+        List<Book> results = bookRepository.findByRating();
         assertThat(results, hasSize(2));
         List<String> names = results.stream().map(Book::getName).collect(toList());
         assertThat(names, contains("C+", "Java"));
@@ -95,7 +99,15 @@ public class BookTest extends BaseTest {
 
     @Test
     public void findByName() {
-        Book book = bookDao.findByName("Java");
-        assertThat(book.getName(), equalTo("Java"));
+        Optional<Book> book = bookRepository.findBooksByNameLikeIgnoreCase("Java");
+        assertTrue(book.isPresent());
+    }
+
+    @Test
+    public void findAllBy() {
+        Iterable<Book> books = bookRepository.findAllBy(PageRequest.of(0, 2));
+        List<Book> values = new ArrayList<>();
+        books.forEach(values::add);
+        assertThat(values, hasSize(2));
     }
 }

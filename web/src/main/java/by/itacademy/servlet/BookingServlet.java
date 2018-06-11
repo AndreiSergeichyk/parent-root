@@ -1,6 +1,8 @@
 package by.itacademy.servlet;
 
-import by.itacademy.dao.impl.BookDaoImpl;
+import by.itacademy.service.interfaces.BookService;
+import by.itacademy.util.ContextUtil;
+import org.springframework.data.domain.PageRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +16,7 @@ public class BookingServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("books", BookDaoImpl.getInstance().findAll());
+        req.setAttribute("books", ContextUtil.getBean(BookService.class).findAllBy(PageRequest.of(0, 2)));
         getServletContext()
                 .getRequestDispatcher("/WEB-INF/jsp/booking.jsp")
                 .forward(req, resp);
@@ -23,8 +25,8 @@ public class BookingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Integer numberPage = Integer.valueOf(req.getParameter("numberPage"));
-        Integer limit = Integer.valueOf(req.getParameter("limit"));
-        req.setAttribute("books", BookDaoImpl.getInstance().findAll(limit, numberPage));
+        Integer size = Integer.valueOf(req.getParameter("limit"));
+        req.setAttribute("books", ContextUtil.getBean(BookService.class).findAllBy(PageRequest.of(numberPage - 1, size)));
         getServletContext()
                 .getRequestDispatcher("/WEB-INF/jsp/booking.jsp")
                 .forward(req, resp);

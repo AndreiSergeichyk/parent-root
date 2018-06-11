@@ -1,39 +1,39 @@
 package by.itacademy.dao;
 
-import by.itacademy.dao.impl.GenreDaoImpl;
 import by.itacademy.entity.Genre;
+import by.itacademy.repository.initerface.GenreRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class GenreTest extends BaseTest {
+public class GenreTest extends BaseCase {
 
     @Autowired
-    private GenreDaoImpl genreDao;
+    private GenreRepository genreRepository;
 
     @Test
     public void saveGenre() {
         Genre genre = new Genre("Боевик5");
-        Long genreId = genreDao.save(genre);
-        Assert.assertNotNull("Id is Null!", genreId);
+        genre = genreRepository.save(genre);
+        Assert.assertNotNull("Entity is Null!", genre);
     }
 
     @Test
     public void findGenre() {
-        Genre genre = genreDao.findByName("Научный");
-        Assert.assertNotNull("Entity is null", genre);
-        genreDao.findById(genre.getId());
-        assertThat(genre.getName(), equalTo("Научный"));
+        Optional<Genre> genre = genreRepository.findByName("Научный");
+        Assert.assertTrue(genre.isPresent());
+        genreRepository.findById(genre.get().getId());
+        assertThat(genre.get().getName(), equalTo("Научный"));
     }
 
     @Test
     public void findByName() {
-        Genre genre = genreDao.findByName("Научный");
-        assertThat(genre.getName(), equalTo("Научный"));
+        Optional<Genre> genre = genreRepository.findByName("Научный");
+        Assert.assertTrue(genre.isPresent());
     }
 }
