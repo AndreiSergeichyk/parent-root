@@ -28,4 +28,8 @@ public class Vote extends BaseEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
+
+    public Vote(BigDecimal value) {
+        this.value = value;
+    }
 }

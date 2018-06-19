@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,19 +23,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        filter(http);
         http
                 .authorizeRequests()
-                    .antMatchers("/handBook")
+                .antMatchers("/handBook")
                 .hasAnyAuthority("admin")
-                    .anyRequest()
-                        .permitAll()
+                .anyRequest()
+                .permitAll()
                 .and()
-                    .formLogin()
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/book")
+                .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/book")
                 .and()
-                    .logout();
+                .logout();
         http.userDetailsService(userDetailsService);
+    }
+
+    public CharacterEncodingFilter filter(HttpSecurity httpSecurity) {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setForceEncoding(true);
+        characterEncodingFilter.setEncoding("UTF-8");
+        httpSecurity.addFilterBefore(characterEncodingFilter, CsrfFilter.class);
+        return characterEncodingFilter;
     }
 
     @Bean

@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
+@ToString(exclude = {"userBooks"})
 @Entity
 @Table(name = "\"user\"", schema = "library_storage")
 public class User extends BaseEntity<Long> {

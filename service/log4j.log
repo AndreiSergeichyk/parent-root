@@ -1,9 +1,11 @@
-2018-06-10 20:19:31,602 INFO  - HHH000204: Processing PersistenceUnitInfo [
+2018-06-17 18:12:34,648 INFO  - HHH000204: Processing PersistenceUnitInfo [
 	name: default
 	...]
-2018-06-10 20:19:31,907 INFO  - HHH000412: Hibernate Core {5.2.17.Final}
-2018-06-10 20:19:31,938 INFO  - HHH000205: Loaded properties from resource hibernate.properties: {hibernate.dialect=org.hibernate.dialect.H2Dialect, hibernate.show_sql=true, hibernate.bytecode.use_reflection_optimizer=false, hibernate.hbm2ddl.auto=create-drop, hibernate.format_sql=true}
-2018-06-10 20:19:32,085 INFO  - HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
-2018-06-10 20:19:32,830 INFO  - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
-2018-06-10 20:19:34,642 INFO  - HHH000476: Executing import script 'org.hibernate.tool.schema.internal.exec.ScriptSourceInputNonExistentImpl@26865482'
-2018-06-10 20:19:35,743 INFO  - HHH000397: Using ASTQueryTranslatorFactory
+2018-06-17 18:12:34,795 INFO  - HHH000412: Hibernate Core {5.2.17.Final}
+2018-06-17 18:12:34,795 INFO  - HHH000205: Loaded properties from resource hibernate.properties: {hibernate.dialect=org.hibernate.dialect.H2Dialect, hibernate.show_sql=true, hibernate.bytecode.use_reflection_optimizer=false, hibernate.hbm2ddl.auto=create-drop, hibernate.format_sql=true}
+2018-06-17 18:12:34,880 INFO  - HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+2018-06-17 18:12:35,612 INFO  - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2018-06-17 18:12:37,169 INFO  - HHH000476: Executing import script 'org.hibernate.tool.schema.internal.exec.ScriptSourceInputNonExistentImpl@1f10fec6'
+2018-06-17 18:12:38,727 INFO  - HHH000397: Using ASTQueryTranslatorFactory
+2018-06-17 18:12:39,958 INFO  - by.itacademy.service.impl.BookServiceImpl@6b3f4bd8 find all entity
+2018-06-17 18:12:40,637 INFO  - HHH000477: Starting delayed drop of schema as part of SessionFactory shut-down'

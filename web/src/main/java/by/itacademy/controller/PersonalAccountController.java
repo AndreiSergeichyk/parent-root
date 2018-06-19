@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class PersonalAccount {
+public class PersonalAccountController {
 
     @GetMapping("/personalAccount")
     public String personalAccountPage(Model model) {

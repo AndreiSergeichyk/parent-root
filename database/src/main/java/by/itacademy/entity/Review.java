@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"book"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
