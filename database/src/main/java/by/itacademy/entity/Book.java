@@ -17,7 +17,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"votes"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

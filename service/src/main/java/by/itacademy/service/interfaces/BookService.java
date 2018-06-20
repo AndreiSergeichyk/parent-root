@@ -8,15 +8,27 @@ import java.util.List;
 
 public interface BookService extends ServiceInt<Long, Book> {
 
-    List<Book> findAllBy(Pageable pageable);
+    List<Book> findAllBy(Integer numberPage, Integer countBookOnPage);
 
-    List<Book> findAllByGenreId(Serializable genreId);
+    Integer countBooks();
 
-    List<Book> findAllByAuthorNameLikeIgnoreCase(String authorName);
+    List<Book> findAllByGenreName(String genreName, Integer numberPage, Integer countBookOnPage);
 
-    Book findBooksByNameLikeIgnoreCase(String bookName);
+    Integer countBooksByGenreName(String genreName);
 
-    List<Book> findBooksByNameStartingWithIgnoreCase(String letter);
+    List<Book> findAllByAuthor(String authorName, Integer numberPage, Integer countBookOnPage);
+
+    Integer countBooksByAuthorName(String authorName);
+
+    List<Book> findBooksByName(String bookName, Integer numberPage, Integer countBookOnPage);
+
+    Integer countBooksByBookName(String bookName);
+
+    List<Book> findBooksByLetter(String letter, Integer numberPage, Integer countBookOnPage);
+
+    Integer countBooksByFirstLetter(String letter);
 
     List<Book> findByRating();
+
+    int updateBook(Book book);
 }

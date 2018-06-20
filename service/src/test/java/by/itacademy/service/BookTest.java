@@ -27,21 +27,21 @@ public class BookTest extends BaseCase {
 
     @Test
     public void findAllBy() {
-        List<Book> books = bookService.findAllBy(PageRequest.of(0, 2));
+        List<Book> books = bookService.findAllBy(1, 2);
         assertThat(books, hasSize(2));
     }
 
     @Test
     public void findByAuthorName() {
-        List<Book> results = bookService.findAllByAuthorNameLikeIgnoreCase("authorSecond");
+        List<Book> results = bookService.findAllByAuthor("authorSecond", 1, 5);
         assertThat(results, hasSize(1));
     }
 
     @Test
-    public void findByGenreId() {
+    public void findByGenreName() {
         Genre genre = genreService.findByName("Научный");
         Assert.assertNotNull("Genre is Null", genre);
-        List<Book> results = bookService.findAllByGenreId(genre.getId());
+        List<Book> results = bookService.findAllByGenreName(genre.getName(), 1, 5);
         assertThat(results, hasSize(2));
         List<String> names = results.stream().map(Book::getName).collect(toList());
         assertThat(names, contains("Java", "C+"));
@@ -49,7 +49,7 @@ public class BookTest extends BaseCase {
 
     @Test
     public void findByLetter() {
-        List<Book> results = bookService.findBooksByNameStartingWithIgnoreCase("c");
+        List<Book> results = bookService.findBooksByLetter("c", 1, 5);
         assertThat(results, hasSize(1));
         List<String> names = results.stream().map(Book::getName).collect(toList());
         assertThat(names, contains("C+"));
@@ -65,7 +65,23 @@ public class BookTest extends BaseCase {
 
     @Test
     public void findByName() {
-        Book java = bookService.findBooksByNameLikeIgnoreCase("Java");
+        List<Book> books = bookService.findBooksByName("Java", 1, 5);
+        Book java = books.get(0);
         assertThat(java.getName(), equalTo("Java"));
+    }
+
+    @Test
+    public void countBook() {
+        Integer booksSize = bookService.countBooks();
+        Assert.assertNotNull("entity is null", booksSize);
+    }
+
+    @Test
+    public void update() {
+        List<Book> books = bookService.findAll();
+        Book book = books.get(0);
+        book.setNumberCopies(0);
+        int count = bookService.updateBook(book);
+        assertThat(count, equalTo(1));
     }
 }

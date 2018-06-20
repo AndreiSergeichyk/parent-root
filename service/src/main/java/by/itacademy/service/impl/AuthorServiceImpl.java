@@ -2,6 +2,7 @@ package by.itacademy.service.impl;
 
 import by.itacademy.entity.Author;
 import by.itacademy.repository.initerface.AuthorRepository;
+import by.itacademy.service.interfaces.AuthorService;
 import by.itacademy.service.interfaces.ServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @Transactional
 @Service
-public class AuthorServiceImpl implements ServiceInt<Long, Author> {
+public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
 

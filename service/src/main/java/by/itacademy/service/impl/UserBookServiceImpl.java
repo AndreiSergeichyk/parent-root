@@ -1,6 +1,7 @@
 package by.itacademy.service.impl;
 
 import by.itacademy.entity.UserBook;
+import by.itacademy.repository.initerface.BookRepository;
 import by.itacademy.repository.initerface.UserBookRepository;
 import by.itacademy.service.interfaces.UserBookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,14 @@ import java.util.Optional;
 @Transactional
 public class UserBookServiceImpl implements UserBookService {
 
+    public static final int MINUS_BOOK = 1;
     private final UserBookRepository userBookRepository;
+    private final BookRepository bookRepository;
 
     @Autowired
-    public UserBookServiceImpl(UserBookRepository userBookRepository) {
+    public UserBookServiceImpl(UserBookRepository userBookRepository, BookRepository bookRepository) {
         this.userBookRepository = userBookRepository;
+        this.bookRepository = bookRepository;
     }
 
     @Override
@@ -29,8 +33,11 @@ public class UserBookServiceImpl implements UserBookService {
     }
 
     @Override
-    public UserBook save(UserBook object) {
-        return userBookRepository.save(object);
+    public UserBook save(UserBook userBook) {
+        int newCountBook = userBook.getBook().getNumberCopies() - MINUS_BOOK;
+        bookRepository.updateBook(newCountBook, userBook.getBook().getId());
+
+        return userBookRepository.save(userBook);
     }
 
     @Override

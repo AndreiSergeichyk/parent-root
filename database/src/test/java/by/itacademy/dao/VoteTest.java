@@ -6,14 +6,12 @@ import by.itacademy.repository.initerface.VoteRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
-import java.util.Optional;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class VoteTest extends BaseCase {
 
@@ -25,9 +23,9 @@ public class VoteTest extends BaseCase {
 
     @Test
     public void findByBookId() {
-        Optional<Book> book = bookRepository.findBooksByNameLikeIgnoreCase("java");
-        assertTrue(book.isPresent());
-        BigDecimal avgVote = voteRepository.avgVote(book.get().getId());
+        List<Book> books = bookRepository.findAllByNameContainingIgnoreCase("java", PageRequest.of(0, 5));
+        Book book = books.get(0);
+        BigDecimal avgVote = voteRepository.avgVote(book.getId());
         Assert.assertThat(avgVote, equalTo(BigDecimal.valueOf(4.5)));
     }
 }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="form-group">
+        <a th:href="@{/handBook}">Справочники</a>
+        <a th:href="@{/addBook}">Добавить книгу</a>
+        <a th:href="@{/personalAccount}">Личный кабинет</a>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" th:value="Logout"/>
+        </form>
+        <div class="form-group">
+            <form th:action="@{/book}" method="post">
+                <select name="language" onchange="submit()">
+                    <option th:value="en_US">English</option>
+                    <option th:value="ru_RU">Русский</option>
+                </select>
+            </form>
+        </div>
+        <form th:action="@{/book}" method="post">
+            <div>
+                <div>
+                    <input type="text" id="searchString" size="150" th:name="searchString">
+                    <input type="submit" id="searchButton" value="Поиск">
+                </div>
+                <div>
+                    <input type="radio" th:value="TITLE" th:name="searchType"><span>Книга</span><br>
+                    <input type="radio" th:value="AUTHOR" th:name="searchType"><span>Автор</span>
+                </div>
+            </div>
+            <span th:each="currentLetter : ${letters}">
+                    <a th:href="@{'/bookLetter/'+${numberPage}+'/'+ ${currentLetter}}">
+                        <span th:text="${currentLetter}">letter</span></a>
+            </span>
+            <div class=" form-group">
+                Жанры:
+                <div th:each="genre :${genres}">
+                    <a th:href="@{'/bookGenre/'+${genre.name}+'/'+ ${numberPage}}">
+                        <span th:text="${genre.name}"></span></a>
+                </div>
+                <a th:href="@{/book}">
+                    <span>Все жанры</span>
+                </a>
+            </div>
+            <label>Найдено книг:</label><span th:text="${countBooks}">колличество книг</span>
+            <div>
+                <br>Страница:
+                <label th:if="${genreName}!=null" th:each="selectedPageNumber : ${pageCountList}">
+                    <a th:href="@{'/bookGenre/'+${genreName}+ '/'+ ${selectedPageNumber}}">
+                        <span th:text="${selectedPageNumber}">page</span>
+                    </a>
+                </label>
+                <label th:if="${searchLetter}!=null" th:each="selectedPageNumber : ${pageCountList}">
+                    <a th:href="@{'/bookLetter/'+${selectedPageNumber}+ '/'+ ${searchLetter}}">
+                        <span th:text="${selectedPageNumber}">page</span>
+                    </a>
+                </label>
+                <label th:if="${searchLetter}==null and ${genreName}==null"
+                       th:each="selectedPageNumber : ${pageCountList}">
+                    <a th:href="@{'/book/'+ ${selectedPageNumber}}">
+                        <span th:text="${selectedPageNumber}">page</span>
+                    </a>
+                </label>
+            </div>
+            <div class="form-group">
+                <div th:each="currentBook :${books}">
+                    <a href="/bookDetail"
+                       th:value="bookId"
+                       th:href="@{/bookDetail(bookId=${currentBook.id})}"><img
+                            th:src="${currentBook.image}">image</a><br>
+                    Название книги: <span th:text="${currentBook.name}"></span><br>
+                    Автор: <span th:text="${currentBook.author.name}"></span><br>
+                    Публикация: <span th:text="${currentBook.publisher.name}"></span><br>
+                    Колличество страниц: <span th:text="${currentBook.pageCount}"></span><br>
+                    Колличество копий: <span th:text="${currentBook.numberCopies}"></span><br>
+                    <!--Рейтинг: <span th:text="${currentBook.votes.size()}"></span><br>-->
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+</body>
+</html>

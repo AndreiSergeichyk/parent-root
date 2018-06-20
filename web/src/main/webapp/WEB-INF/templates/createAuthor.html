@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Author</title>
+</head>
+<body>
+Добавление нового автора
+<div>
+    <form th:action="@{/saveAuthor}" method="post" th:object="${author}">
+        <table border="0">
+            <tr>
+                <td><strong>Имя автора</strong></td>
+                <td></td>
+            </tr>
+            <tr th:each="author : ${allAuthor}">
+                <td th:text="${author.name}"></td>
+                <td>
+                    <a th:href="@{/authorDelete(id=${author.id})}">delete</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>
+                        <input type="text" id="name" th:field="*{name}">
+                    </strong>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+        <input type="submit" value="create">
+    </form>
+</div>
+</body>
+</html>
